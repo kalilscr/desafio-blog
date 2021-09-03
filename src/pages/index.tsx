@@ -1,5 +1,9 @@
-import { GetStaticProps } from 'next';
+import { Header } from '../components/Header/index'
 
+import { GetStaticProps } from 'next';
+import Link from 'next/link';
+
+import Prismic from '@prismicio/client';
 import { getPrismicClient } from '../services/prismic';
 
 import commonStyles from '../styles/common.module.scss';
@@ -24,13 +28,53 @@ interface HomeProps {
   postsPagination: PostPagination;
 }
 
-// export default function Home() {
-//   // TODO
-// }
+export default function Home({ postsPagination }: HomeProps) {
+  return (
+      <>
+        <main className={styles.container}>
+            <Header />
+            <div className={styles.posts}>
+                <strong>{}</strong>
+                <p>subtittulo subtittulosubtittulosubtittulosubtittulosubtittulosubtittulosubtittulosubtittulo</p>
+                <time>30 Mar 2077</time>
+                <address>john doe</address>
 
-// export const getStaticProps = async () => {
-//   // const prismic = getPrismicClient();
-//   // const postsResponse = await prismic.query(TODO);
+                <button type="button">Carregar mais posts</button>
+            </div>
+        </main>
+      </>
+  )
+} 
 
-//   // TODO
-// };
+export const getStaticProps: GetStaticProps = async () => {
+  const prismic = getPrismicClient();
+
+  const postsResponse = await prismic.query([
+    Prismic.predicates.at('document.type', 'posts')
+], {
+    fetch: ['posts.title', 'posts.subtitle', 'posts.author'],
+    pageSize: 1,
+});
+
+const postList = postsResponse.results.map(posts => {
+  return {
+    uid: posts.uid,
+    first_publication_date: new Date(posts.first_publication_date).toLocaleDateString('pt-BR', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+    }),
+    data: {
+      title: posts.data.title,
+      subtitle: posts.data.subtitle,
+      author: posts.data.author,
+    }
+  };
+});
+
+return {
+    props: {
+      postList,
+    }
+  }
+};

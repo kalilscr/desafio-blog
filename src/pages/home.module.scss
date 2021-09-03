@@ -1,1 +1,49 @@
-// TODO
+.container {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+  
+  .posts {
+    max-width: 700px;
+    margin: 4rem auto 0;
+    
+      strong {
+        display: block;
+        font-size: 1.5rem;
+      }
+  
+      p {
+        color: var(--body);
+        margin-top: 0.5rem;
+        margin-bottom: 1.25rem;
+        line-height: 1.625rem;
+      }
+
+      time {
+        font-size: 1rem;
+        color: var(--body);
+        float: left;
+        margin-right: 1.5rem;
+      }
+
+      address {
+        color: var(--body);
+      }
+      
+      button {
+          color: var(--highlight);
+          background: var(--background);
+          border-style: none;
+          margin-top: 4rem;
+
+          &:hover {
+            border-radius: 1rem;
+            filter: brightness(0.8);
+            transition: color 0.2s;
+          }
+      }
+
+      
+
+  }
