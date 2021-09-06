@@ -3,7 +3,7 @@ import { Header } from '../components/Header/index'
 import { GetStaticProps } from 'next';
 import Link from 'next/link';
 
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import ptBR from 'date-fns/locale/pt-BR';
 
 import Prismic from '@prismicio/client';
@@ -33,12 +33,29 @@ interface HomeProps {
 }
 
 export default function Home({ postsPagination }: HomeProps) {
-  const {results} = postsPagination 
+  const {results, next_page} = postsPagination 
   const result = results.map(result => ({
     ...result,
   }))
 
   const [posts, setPosts] = useState<Post[]>(result);
+  const [nextPost, setNextPost] = useState(next_page);
+  
+  async function handleNextPosts(): Promise<void> {
+    if (nextPost === null) {
+      return;
+    }
+
+    const nextPosts = await fetch(nextPost).then(response =>
+      response.json()
+    );
+
+    //console.log(nextPosts)
+
+    setPosts([...posts, ...nextPosts.results]);
+    setNextPost(nextPosts.next_page);
+
+  }
 
   return (
       <>
@@ -50,13 +67,21 @@ export default function Home({ postsPagination }: HomeProps) {
                       <a key={post.uid}>
                         <strong>{post.data.title}</strong>
                         <p>{post.data.subtitle}</p>
-                        <time>{post.first_publication_date}</time>
+                        <time>
+                            {format(
+                              parseISO(post.first_publication_date),
+                              "dd MMM' 'yyyy",
+                              {
+                                locale: ptBR,
+                              }
+                            )}
+                         </time>
                         <address>{post.data.author}</address>
                       </a>
                   </Link>
                 ))}
 
-                <button type="button">Carregar mais posts</button>
+                <button type="button" onClick={handleNextPosts}>Carregar mais posts</button>
             </div>
         </main>
       </>
@@ -69,21 +94,14 @@ export const getStaticProps: GetStaticProps = async () => {
   const postsResponse = await prismic.query([
     Prismic.predicates.at('document.type', 'posts')
 ], {
-   // fetch: ['posts.title', 'posts.subtitle', 'posts.author'],
+    fetch: ['posts.title', 'posts.subtitle', 'posts.author'],
     pageSize: 1,
-  //  orderings: '[document.last_publication_date desc]',
 });
 
 const postList = postsResponse.results.map(post => {
   return {
     uid: post.uid,
-    first_publication_date: format(
-      new Date(post.first_publication_date),
-      "dd MMM' 'yyyy",
-      {
-        locale: ptBR,
-      }
-    ),
+    first_publication_date: post.first_publication_date,
     data: {
       title: post.data.title,
       subtitle: post.data.subtitle,

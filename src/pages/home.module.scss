@@ -25,17 +25,19 @@
         color: var(--body);
         float: left;
         margin-right: 1.5rem;
+        
       }
 
       address {
         color: var(--body);
+        margin-bottom: 3rem;
       }
       
       button {
           color: var(--highlight);
           background: var(--background);
           border-style: none;
-          margin-top: 4rem;
+          margin-top: 1rem;
 
           &:hover {
             border-radius: 1rem;
