@@ -42,10 +42,7 @@ export default function Home({ postsPagination }: HomeProps) {
   const [nextPost, setNextPost] = useState(next_page);
   
   async function handleNextPosts(): Promise<void> {
-    if (nextPost === null) {
-      return;
-    }
-
+    
     const nextPosts = await fetch(nextPost).then(response =>
       response.json()
     );
@@ -81,7 +78,7 @@ export default function Home({ postsPagination }: HomeProps) {
                   </Link>
                 ))}
 
-                <button type="button" onClick={handleNextPosts}>Carregar mais posts</button>
+                <button type="button" onClick={handleNextPosts} disabled={nextPost === null}>Carregar mais posts</button>
             </div>
         </main>
       </>
