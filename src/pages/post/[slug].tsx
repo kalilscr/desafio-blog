@@ -11,8 +11,10 @@ import Prismic from '@prismicio/client';
 import commonStyles from '../../styles/common.module.scss';
 import styles from './post.module.scss';
 import { useRouter } from 'next/router';
+import { RichText } from 'prismic-dom';
 
 interface Post {
+  uid: string;
   first_publication_date: string | null;
   data: {
     title: string;
@@ -45,7 +47,7 @@ interface PostProps {
   return (
     <>
       <Header />
-      <main >
+      <main> 
     
           <div>{post.data.banner.url}</div>
           <h1>{post.data.title}</h1>
@@ -63,7 +65,11 @@ interface PostProps {
           {post.data.content.map(content => (
             <section key={content.heading}>
               <h2>{content.heading}</h2>
-              <article>{content.body}</article>
+              <article 
+              dangerouslySetInnerHTML={{
+                __html: RichText.asHtml(content.body),
+              }}
+              />
             </section>
           ))}
           
@@ -80,7 +86,9 @@ export const getStaticPaths: GetStaticPaths = async () => {
   ]);
 
   const paths = posts.results.map(post => ({
-    params: { slug: post.uid },
+    params: { 
+      slug: post.uid 
+    },
   }));
 
   return {
@@ -108,7 +116,6 @@ export const getStaticProps: GetStaticProps = async context => {
       content: response.data.content
     },
   };
-
 
   return {
     props: {
