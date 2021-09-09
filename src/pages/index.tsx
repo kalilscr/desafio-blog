@@ -42,7 +42,10 @@ export default function Home({ postsPagination }: HomeProps) {
   const [nextPost, setNextPost] = useState(next_page);
   
   async function handleNextPosts(): Promise<void> {
-    
+    if(nextPost === null){
+      return;
+    }
+
     const nextPosts = await fetch(nextPost).then(response =>
       response.json()
     );
@@ -56,7 +59,7 @@ export default function Home({ postsPagination }: HomeProps) {
 
   return (
       <>
-        <main className={styles.container}>
+        <main className={commonStyles.container}>
             <Header />
             <div className={styles.posts}>
                 {posts.map(post => (
@@ -77,8 +80,10 @@ export default function Home({ postsPagination }: HomeProps) {
                       </a>
                   </Link>
                 ))}
-
-                <button type="button" onClick={handleNextPosts} disabled={nextPost === null}>Carregar mais posts</button>
+                
+                {nextPost && (
+                <button type="button" onClick={handleNextPosts} /*disabled={nextPost === null}*/>Carregar mais posts</button>
+                )}
             </div>
         </main>
       </>

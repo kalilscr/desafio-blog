@@ -47,33 +47,32 @@ interface PostProps {
   return (
     <>
       <Header />
-      <main> 
-    
-          <div>{post.data.banner.url}</div>
-          <h1>{post.data.title}</h1>
-          <time>
-              {format(
-                parseISO(post.first_publication_date),
-                "dd MMM' 'yyyy",
-                {
-                  locale: ptBR,
-                }
-              )}
-          </time>
-          <address>{post.data.author}</address>
-          
-          {post.data.content.map(content => (
-            <section key={content.heading}>
-              <h2>{content.heading}</h2>
-              <article 
-              dangerouslySetInnerHTML={{
-                __html: RichText.asHtml(content.body),
-              }}
-              />
-            </section>
-          ))}
-          
-        
+      <img src={post.data.banner.url} alt="banner" className={styles.banner}/>
+      <main className={commonStyles.container}>  
+        <article className={styles.article}> 
+            <h1>{post.data.title}</h1>
+            <time>
+                {format(
+                  parseISO(post.first_publication_date),
+                  "dd MMM' 'yyyy",
+                  {
+                    locale: ptBR,
+                  }
+                )}
+            </time>
+            <address>{post.data.author}</address>
+            
+            {post.data.content.map(content => (
+              <section key={content.heading}>
+                <h2>{content.heading}</h2>
+                <article 
+                dangerouslySetInnerHTML={{
+                  __html: RichText.asHtml(content.body),
+                }}
+                />
+              </section>
+            ))}
+        </article>
       </main>
     </>
   )
