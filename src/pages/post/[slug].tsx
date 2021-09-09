@@ -2,6 +2,8 @@ import { GetStaticPaths, GetStaticProps } from 'next';
 import React, { useState } from 'react';
 import { Header } from '../../components/Header';
 
+import { FiCalendar, FiClock, FiUser } from 'react-icons/fi';
+
 import { format, parseISO } from 'date-fns';
 import ptBR from 'date-fns/locale/pt-BR';
 
@@ -12,6 +14,7 @@ import commonStyles from '../../styles/common.module.scss';
 import styles from './post.module.scss';
 import { useRouter } from 'next/router';
 import { RichText } from 'prismic-dom';
+import Head from 'next/head';
 
 interface Post {
   uid: string;
@@ -43,14 +46,28 @@ interface PostProps {
   if (router.isFallback) {
     return <div>Carregando...</div>
   }
+
+  function readingTime() {
+    
+    const text = post.data.content.map(content => content.body.map(content => content.text));  // fetch the article text so we can preform the calculations.                               
+    const words = String(text).trim().split(/\s+/).length;     // calculate total number of words (length) by splitting at each whitespace.
+    const time = Math.ceil(words / 200);                       // calculates the read time rounded up to the nearest whole number. 200 = average adult reading speed (words per minute).
+    return time;
+  }
+  
   
   return (
     <>
+      <Head>
+        <title>Post | spacetraveling</title>
+      </Head>
+      
       <Header />
       <img src={post.data.banner.url} alt="banner" className={styles.banner}/>
       <main className={commonStyles.container}>  
         <article className={styles.article}> 
             <h1>{post.data.title}</h1>
+            <FiCalendar />
             <time>
                 {format(
                   parseISO(post.first_publication_date),
@@ -60,7 +77,14 @@ interface PostProps {
                   }
                 )}
             </time>
-            <address>{post.data.author}</address>
+            <FiUser />
+            <address>
+              {post.data.author}
+            </address>
+            <FiClock />
+            <span>{readingTime()} min</span>
+
+            
             
             {post.data.content.map(content => (
               <section key={content.heading}>

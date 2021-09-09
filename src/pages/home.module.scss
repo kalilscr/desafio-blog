@@ -19,7 +19,6 @@
     time {
       font-size: 1rem;
       color: var(--body);
-      float: left;
       margin-right: 1.5rem;
       
     }
@@ -27,6 +26,11 @@
     address {
       color: var(--body);
       margin-bottom: 3rem;
+    }
+
+    time, address {
+      display: inline-block;
+      margin-left: 0.5rem;
     }
 
     button {

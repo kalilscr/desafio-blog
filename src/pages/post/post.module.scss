@@ -11,11 +11,11 @@
       font-weight: 700;
     }
 
-    time, address {
+    time, address, span {
       font-size: 1.25rem;
       color: var(--info);
       display: inline-block;
-      margin: 1.5rem 1.5rem 4rem 0;
+      margin: 1.5rem 1.5rem 4rem 0.5rem;
     }
     
     h2 {

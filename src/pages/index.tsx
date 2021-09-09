@@ -1,7 +1,10 @@
 import { Header } from '../components/Header/index'
 
+import Head from 'next/head';
 import { GetStaticProps } from 'next';
 import Link from 'next/link';
+
+import { FiCalendar, FiUser } from 'react-icons/fi';
 
 import { format, parseISO } from 'date-fns';
 import ptBR from 'date-fns/locale/pt-BR';
@@ -59,6 +62,9 @@ export default function Home({ postsPagination }: HomeProps) {
 
   return (
       <>
+        <Head>
+          <title>Home | spacetraveling</title>
+        </Head>
         <main className={commonStyles.container}>
             <Header />
             <div className={styles.posts}>
@@ -67,6 +73,7 @@ export default function Home({ postsPagination }: HomeProps) {
                       <a >
                         <strong>{post.data.title}</strong>
                         <p>{post.data.subtitle}</p>
+                        <FiCalendar />
                         <time>
                             {format(
                               parseISO(post.first_publication_date),
@@ -76,6 +83,7 @@ export default function Home({ postsPagination }: HomeProps) {
                               }
                             )}
                          </time>
+                         <FiUser />
                         <address>{post.data.author}</address>
                       </a>
                   </Link>
