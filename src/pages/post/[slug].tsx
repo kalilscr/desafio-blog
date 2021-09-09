@@ -1,6 +1,6 @@
 import { GetStaticPaths, GetStaticProps } from 'next';
 import React, { useState } from 'react';
-import { Header } from '../../components/Header';
+import Header from '../../components/Header';
 
 import { FiCalendar, FiClock, FiUser } from 'react-icons/fi';
 
@@ -49,9 +49,10 @@ interface PostProps {
 
   function readingTime() {
     
-    const text = post.data.content.map(content => content.body.map(content => content.text));  // fetch the article text so we can preform the calculations.                               
-    const words = String(text).trim().split(/\s+/).length;     // calculate total number of words (length) by splitting at each whitespace.
-    const time = Math.ceil(words / 200);                       // calculates the read time rounded up to the nearest whole number. 200 = average adult reading speed (words per minute).
+    const text = post.data.content.map(content => content.body.map(content => content.text)); // fetch the article text so we can preform the calculations.  
+    const heading = post.data.content.map(content => content.heading)                         // fetch the article text so we can preform the calculations.  
+    text.push(heading)                          
+    const time = Math.ceil(String(text).trim().split(/\s+/).length / 200);   // calculates the read time rounded up to the nearest whole number.( calculate total number of words (length) by splitting at each whitespace. / 200 = average adult reading speed (words per minute).)                    
     return time;
   }
   

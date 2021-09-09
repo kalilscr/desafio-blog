@@ -1,4 +1,4 @@
-import { Header } from '../components/Header/index'
+import Header from '../components/Header'
 
 import Head from 'next/head';
 import { GetStaticProps } from 'next';
